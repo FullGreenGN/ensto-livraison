@@ -1,16 +1,15 @@
-import express from "express";
-import cors from "cors";
+import "dotenv/config";
+import { createApp } from "./app";
 
-const app = express();
-const port = process.env.PORT || 3001;
+const PORT = process.env.PORT ?? 3001;
+const app = createApp();
 
-app.use(cors());
-app.use(express.json());
-
-app.get("/", (req, res) => {
-    res.json({ message: "Hello from Turborepo Express API!" });
+const server = app.listen(PORT, () => {
+  console.log(`🚀  API running at http://localhost:${PORT}`);
 });
 
-app.listen(port, () => {
-    console.log(`API running at http://localhost:${port}`);
+// Graceful shutdown
+process.on("SIGTERM", () => {
+  console.log("SIGTERM received – shutting down gracefully");
+  server.close(() => process.exit(0));
 });

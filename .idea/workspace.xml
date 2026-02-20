@@ -4,21 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="31af4273-a2d1-4f6a-a370-1005df7b2b69" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/packages/database/src/errors.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/database/src/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/database/src/interfaces/IRepository.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/database/src/prisma.service.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/database/src/repositories/entreprise.repository.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/database/src/repositories/livreur.repository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/api/src/lib/crypto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/api/src/lib/crypto.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/api/src/lib/prisma.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/api/src/middlewares/errorHandler.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/api/src/middlewares/errorHandler.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/api/src/services/entreprise.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/api/src/services/entreprise.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/api/src/services/livreur.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/api/src/services/livreur.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/database/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/database/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
+    <list default="true" id="31af4273-a2d1-4f6a-a370-1005df7b2b69" name="Changes" comment="implement encryption and decryption functions, add entreprise and livreur repositories, and enhance error handling">
+      <change beforePath="$PROJECT_DIR$/packages/database/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/packages/database/prisma/schema.prisma" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,10 +129,23 @@
       <workItem from="1771541971798" duration="35000" />
       <workItem from="1771575965240" duration="3136000" />
     </task>
+    <task id="LOCAL-00001" summary="implement encryption and decryption functions, add entreprise and livreur repositories, and enhance error handling">
+      <option name="closed" value="true" />
+      <created>1771610019979</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1771610019979</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="implement encryption and decryption functions, add entreprise and livreur repositories, and enhance error handling" />
+    <option name="LAST_COMMIT_MESSAGE" value="implement encryption and decryption functions, add entreprise and livreur repositories, and enhance error handling" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

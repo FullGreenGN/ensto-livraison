@@ -34,87 +34,89 @@ enum TypeActionLog {
 // --------------------------------------------------------
 
 model Entreprise {
-  id             Int       @id @default(autoincrement()) @map("id_entreprise")
-  nomEntreprise  String    @map("nom_entreprise") @db.VarChar(100)
-  numeroContact  String    @map("numero_contact") @db.VarChar(20)
+  id            Int    @id @default(autoincrement()) @map("id_entreprise")
+  nomEntreprise String @map("nom_entreprise") @db.VarChar(100)
+  numeroContact String @map("numero_contact") @db.VarChar(20)
 
   // Relations
-  livreurs       Livreur[]
+  livreurs  Livreur[]
+  visiteurs Visiteur[]
 
   @@map("Entreprise")
 }
 
 model Livreur {
-  id                Int         @id @default(autoincrement()) @map("id_livreur")
-  entrepriseId      Int         @map("id_entreprise")
+  id           Int @id @default(autoincrement()) @map("id_livreur")
+  entrepriseId Int @map("id_entreprise")
 
   // Dans PostgreSQL, les données binaires (VARBINARY) se déclarent avec Bytes (bytea)
-  nomChiffre        Bytes       @map("nom_chiffre")
-  prenomChiffre     Bytes       @map("prenom_chiffre")
+  nomChiffre    Bytes @map("nom_chiffre")
+  prenomChiffre Bytes @map("prenom_chiffre")
 
-  charteEpiValide   Boolean     @default(false) @map("charte_epi_valide")
-  dateSignatureEpi  DateTime?   @map("date_signature_epi")
+  charteEpiValide  Boolean   @default(false) @map("charte_epi_valide")
+  dateSignatureEpi DateTime? @map("date_signature_epi")
 
   // Relations
-  entreprise        Entreprise  @relation(fields: [entrepriseId], references: [id], onDelete: Restrict)
-  vehicules         Vehicle[]
+  entreprise Entreprise @relation(fields: [entrepriseId], references: [id], onDelete: Restrict)
+  vehicules  Vehicle[]
 
   @@map("Livreur")
 }
 
 model Vehicle {
-  id              Int              @id @default(autoincrement()) @map("id_vehicule")
-  livreurId       Int              @map("id_livreur")
-  immatriculation String           @unique @db.VarChar(20)
-  type            String?          @map("type_vehicule") @db.VarChar(50)
+  id              Int     @id @default(autoincrement()) @map("id_vehicule")
+  livreurId       Int     @map("id_livreur")
+  immatriculation String  @unique @db.VarChar(20)
+  type            String? @map("type_vehicule") @db.VarChar(50)
 
   // Relations
-  livreur         Livreur          @relation(fields: [livreurId], references: [id], onDelete: Cascade)
-  logs            Historique_Log[]
+  livreur Livreur          @relation(fields: [livreurId], references: [id], onDelete: Cascade)
+  logs    Historique_Log[]
 
   @@map("Vehicule")
 }
 
 model Visiteur {
-  id                  Int              @id @default(autoincrement()) @map("id_visiteur")
-  nomCompletChiffre   Bytes            @map("nom_complet_chiffre")
-  societe             String?          @db.VarChar(100)
-  heureArrivee        DateTime         @default(now()) @map("heure_arrivee")
+  id                Int         @id @default(autoincrement()) @map("id_visiteur")
+  entrepriseId      Int         @map("id_entreprise")
+  nomCompletChiffre Bytes       @map("nom_complet_chiffre")
+  entreprise        Entreprise  @relation(fields: [entrepriseId], references: [id])
+  heureArrivee      DateTime    @default(now()) @map("heure_arrivee")
 
   // Relations
-  logs                Historique_Log[]
+  logs Historique_Log[]
 
   @@map("Visiteur")
 }
 
 model Personnel {
-  id              Int              @id @default(autoincrement()) @map("id_personnel")
-  identifiant     String           @unique @db.VarChar(50)
-  motDePasseHash  String           @map("mot_de_passe_hash") @db.VarChar(64) // SHA-256
-  role            RolePersonnel
+  id             Int           @id @default(autoincrement()) @map("id_personnel")
+  identifiant    String        @unique @db.VarChar(50)
+  motDePasseHash String        @map("mot_de_passe_hash") @db.VarChar(64) // SHA-256
+  role           RolePersonnel
 
   // Relations
-  logs            Historique_Log[]
+  logs Historique_Log[]
 
   @@map("Personnel")
 }
 
 model Historique_Log {
   // BigInt est parfait pour Postgres (BIGSERIAL) pour stocker 5 ans de données
-  id          BigInt         @id @default(autoincrement()) @map("id_log")
-  dateHeure   DateTime       @default(now()) @map("date_heure")
-  typeAction  TypeActionLog  @map("type_action")
-  details     String?        @db.Text
+  id         BigInt        @id @default(autoincrement()) @map("id_log")
+  dateHeure  DateTime      @default(now()) @map("date_heure")
+  typeAction TypeActionLog @map("type_action")
+  details    String?       @db.Text
 
   // Clés étrangères optionnelles (selon qui a déclenché l'action)
-  vehiculeId  Int?           @map("id_vehicule")
-  visiteurId  Int?           @map("id_visiteur")
-  personnelId Int?           @map("id_personnel")
+  vehiculeId  Int? @map("id_vehicule")
+  visiteurId  Int? @map("id_visiteur")
+  personnelId Int? @map("id_personnel")
 
   // Relations
-  vehicule    Vehicle?       @relation(fields: [vehiculeId], references: [id])
-  visiteur    Visiteur?      @relation(fields: [visiteurId], references: [id])
-  personnel   Personnel?     @relation(fields: [personnelId], references: [id])
+  vehicule  Vehicle?   @relation(fields: [vehiculeId], references: [id])
+  visiteur  Visiteur?  @relation(fields: [visiteurId], references: [id])
+  personnel Personnel? @relation(fields: [personnelId], references: [id])
 
   @@map("Historique_Log")
 }

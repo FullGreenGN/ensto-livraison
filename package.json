@@ -23,5 +23,8 @@
   "packageManager": "pnpm@10.4.1",
   "engines": {
     "node": ">=20"
+  },
+  "dependencies": {
+    "prisma": "^7.4.1"
   }
 }

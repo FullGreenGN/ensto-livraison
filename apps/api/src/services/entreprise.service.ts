@@ -1,6 +1,7 @@
-import { Entreprise } from "@repo/db";
-import { prisma } from "../lib/prisma";
-import { NotFoundError } from "../lib/errors";
+import { Entreprise, EntrepriseRepository, PrismaService, Prisma, RecordNotFoundError } from "@repo/db";
+
+const prismaService = PrismaService.getInstance();
+const repository = new EntrepriseRepository(prismaService);
 
 // ── DTOs ──────────────────────────────────────────────────────────────────────
 
@@ -19,39 +20,38 @@ export type UpdateEntrepriseDTO = Partial<CreateEntrepriseDTO>;
  */
 
 export async function getAllEntreprises(): Promise<Entreprise[]> {
-  return prisma.entreprise.findMany({
-    orderBy: { id: "asc" },
-  });
+  return repository.findAll();
 }
 
 export async function getEntrepriseById(id: number): Promise<Entreprise> {
-  const entreprise = await prisma.entreprise.findUnique({ where: { id } });
-
+  const entreprise = await repository.findById(id);
   if (!entreprise) {
-    throw new NotFoundError("Entreprise", id);
+    throw new RecordNotFoundError('Entreprise', id);
   }
-
   return entreprise;
 }
 
 export async function createEntreprise(
   data: CreateEntrepriseDTO,
 ): Promise<Entreprise> {
-  return prisma.entreprise.create({ data });
+  const input: Prisma.EntrepriseCreateInput = {
+    nomEntreprise: data.nomEntreprise,
+    numeroContact: data.numeroContact,
+  };
+  return repository.create(input);
 }
 
 export async function updateEntreprise(
   id: number,
   data: UpdateEntrepriseDTO,
 ): Promise<Entreprise> {
-  // Ensure the record exists before patching – throws 404 otherwise
-  await getEntrepriseById(id);
-
-  return prisma.entreprise.update({ where: { id }, data });
+  const input: Prisma.EntrepriseUpdateInput = {
+    ...(data.nomEntreprise && { nomEntreprise: data.nomEntreprise }),
+    ...(data.numeroContact && { numeroContact: data.numeroContact }),
+  };
+  return repository.update(id, input);
 }
 
-export async function deleteEntreprise(id: number): Promise<void> {
-  await getEntrepriseById(id);
-  await prisma.entreprise.delete({ where: { id } });
+export async function deleteEntreprise(id: number): Promise<Entreprise> {
+  return repository.delete(id);
 }
-

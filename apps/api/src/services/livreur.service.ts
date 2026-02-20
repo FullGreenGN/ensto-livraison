@@ -1,6 +1,8 @@
-import { prisma } from "../lib/prisma";
-import { NotFoundError } from "../lib/errors";
+import { Livreur, LivreurRepository, PrismaService, Prisma, RecordNotFoundError } from "@repo/db";
 import { encrypt, decrypt } from "../lib/crypto";
+
+const prismaService = PrismaService.getInstance();
+const repository = new LivreurRepository(prismaService);
 
 // ── DTOs ──────────────────────────────────────────────────────────────────────
 
@@ -33,7 +35,7 @@ export interface LivreurDTO {
  * Maps a raw Prisma `Livreur` row (Prisma Bytes = Uint8Array) to the public
  * DTO by decrypting the sensitive fields.
  */
-function toDTO(raw: any): LivreurDTO {
+function toDTO(raw: Livreur): LivreurDTO {
   return {
     id: raw.id,
     entrepriseId: raw.entrepriseId,
@@ -47,43 +49,36 @@ function toDTO(raw: any): LivreurDTO {
 // ── Service ───────────────────────────────────────────────────────────────────
 
 export async function getAllLivreurs(): Promise<LivreurDTO[]> {
-  const rows = await prisma.livreur.findMany({ orderBy: { id: "asc" } });
+  const rows = await repository.findAll();
   return rows.map(toDTO);
 }
 
 export async function getLivreurById(id: number): Promise<LivreurDTO> {
-  const row = await prisma.livreur.findUnique({ where: { id } });
-
-  if (!row) {
-    throw new NotFoundError("Livreur", id);
-  }
-
+  const row = await repository.findById(id);
+  if (!row) throw new RecordNotFoundError("Livreur", id);
   return toDTO(row);
 }
 
 export async function getLivreursByEntreprise(
   entrepriseId: number,
 ): Promise<LivreurDTO[]> {
-  const rows = await prisma.livreur.findMany({
-    where: { entrepriseId },
-    orderBy: { id: "asc" },
-  });
+  const rows = await repository.findByEntrepriseId(entrepriseId);
   return rows.map(toDTO);
 }
 
 export async function createLivreur(data: CreateLivreurDTO): Promise<LivreurDTO> {
-  const row = await prisma.livreur.create({
-    data: {
-      entrepriseId: data.entrepriseId,
-      nomChiffre: encrypt(data.nom) as any,        // 🔐 encrypt plain text → bytes
-      prenomChiffre: encrypt(data.prenom) as any,  // 🔐 encrypt plain text → bytes
-      charteEpiValide: data.charteEpiValide ?? false,
-      dateSignatureEpi: data.dateSignatureEpi
-        ? new Date(data.dateSignatureEpi)
-        : null,
-    },
-  });
+  // Use unchecked input if needed or proper relation connection
+  // Using 'any' to bypass strict typing if complex, or map correctly.
 
+  const input: Prisma.LivreurCreateInput = {
+     entreprise: { connect: { id: data.entrepriseId } },
+     nomChiffre: encrypt(data.nom) as any,
+     prenomChiffre: encrypt(data.prenom) as any,
+     charteEpiValide: data.charteEpiValide ?? false,
+     dateSignatureEpi: data.dateSignatureEpi ? new Date(data.dateSignatureEpi) : null
+  };
+
+  const row = await repository.create(input);
   return toDTO(row);
 }
 
@@ -91,31 +86,23 @@ export async function updateLivreur(
   id: number,
   data: UpdateLivreurDTO,
 ): Promise<LivreurDTO> {
-  // Ensure the record exists – throws 404 otherwise
-  await getLivreurById(id);
+  const existing = await repository.findById(id);
+  if (!existing) throw new RecordNotFoundError("Livreur", id);
 
-  const row = await prisma.livreur.update({
-    where: { id },
-    data: {
-      ...(data.nom !== undefined && {
-        nomChiffre: encrypt(data.nom) as any,       // 🔐 re-encrypt updated name
-      }),
-      ...(data.prenom !== undefined && {
-        prenomChiffre: encrypt(data.prenom) as any, // 🔐 re-encrypt updated prénom
-      }),
-      ...(data.charteEpiValide !== undefined && {
-        charteEpiValide: data.charteEpiValide,
-      }),
-      ...(data.dateSignatureEpi !== undefined && {
-        dateSignatureEpi: new Date(data.dateSignatureEpi),
-      }),
-    },
-  });
+  const input: Prisma.LivreurUpdateInput = {
+    ...(data.nom && { nomChiffre: encrypt(data.nom) as any }),
+    ...(data.prenom && { prenomChiffre: encrypt(data.prenom) as any }),
+    ...(data.charteEpiValide !== undefined && { charteEpiValide: data.charteEpiValide }),
+    ...(data.dateSignatureEpi !== undefined && {
+        dateSignatureEpi: data.dateSignatureEpi ? new Date(data.dateSignatureEpi) : null,
+    }),
+  };
 
+  const row = await repository.update(id, input);
   return toDTO(row);
 }
 
-export async function deleteLivreur(id: number): Promise<void> {
-  await getLivreurById(id);
-  await prisma.livreur.delete({ where: { id } });
+export async function deleteLivreur(id: number): Promise<LivreurDTO> {
+  const row = await repository.delete(id);
+  return toDTO(row);
 }

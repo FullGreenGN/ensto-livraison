@@ -1,55 +1,59 @@
 import crypto from 'crypto';
 
 const ALGORITHM = 'aes-256-gcm';
-// Ensure IV_LENGTH is 12 bytes for GCM
 const IV_LENGTH = 12;
+const AUTH_TAG_LENGTH = 16;
 
-// Get key from environment variable or generate a random one for dev (Not safe for production persistence!)
-// In production, ENCRYPTION_KEY must be a 32-byte hex string.
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY
-  ? Buffer.from(process.env.ENCRYPTION_KEY, 'hex')
-  : crypto.randomBytes(32);
+// ── Key bootstrap ─────────────────────────────────────────────────────────────
+// ENCRYPTION_KEY must be a 64-char hex string (32 bytes).
+// Failing fast here is intentional: if the key is missing or wrong the API
+// must NOT start, because any data already written would become unreadable.
+
+if (!process.env.ENCRYPTION_KEY) {
+  throw new Error(
+    '[crypto] ENCRYPTION_KEY is not set. ' +
+    'Generate one with: node -e "console.log(require(\'crypto\').randomBytes(32).toString(\'hex\'))"'
+  );
+}
+
+const keyBuffer = Buffer.from(process.env.ENCRYPTION_KEY, 'hex');
+
+if (keyBuffer.length !== 32) {
+  throw new Error(
+    `[crypto] ENCRYPTION_KEY must be a 64-character hex string (32 bytes). Got ${keyBuffer.length} bytes.`
+  );
+}
+
+const ENCRYPTION_KEY = keyBuffer;
 
 /**
  * Encrypts text using AES-256-GCM.
- * Returns a Buffer containing IV + AuthTag + EncryptedText.
+ * Returns a Buffer containing: IV (12 bytes) | AuthTag (16 bytes) | CipherText.
  */
 export function encrypt(text: string): Buffer {
   const iv = crypto.randomBytes(IV_LENGTH);
   const cipher = crypto.createCipheriv(ALGORITHM, ENCRYPTION_KEY, iv);
-
-  let encrypted = cipher.update(text, 'utf8');
-  encrypted = Buffer.concat([encrypted, cipher.final()]);
-
+  const encrypted = Buffer.concat([cipher.update(text, 'utf8'), cipher.final()]);
   const authTag = cipher.getAuthTag();
-
-  // Return IV + AuthTag + Encrypted
   return Buffer.concat([iv, authTag, encrypted]);
 }
 
 /**
- * Decrypts a Buffer (IV + AuthTag + EncryptedText) back to string.
+ * Decrypts a Buffer (IV | AuthTag | CipherText) back to a UTF-8 string.
  */
 export function decrypt(data: Buffer | Uint8Array): string {
-  // Convert Uint8Array to Buffer if needed
   const buffer = Buffer.isBuffer(data) ? data : Buffer.from(data);
 
-  if (buffer.length < IV_LENGTH + 16) { // 16 bytes is default auth tag length
-    throw new Error('Invalid encrypted data length');
+  if (buffer.length < IV_LENGTH + AUTH_TAG_LENGTH) {
+    throw new Error('[crypto] Invalid encrypted data: buffer too short.');
   }
 
-  // Extract parts
   const iv = buffer.subarray(0, IV_LENGTH);
-  const authTag = buffer.subarray(IV_LENGTH, IV_LENGTH + 16);
-  const encryptedText = buffer.subarray(IV_LENGTH + 16);
+  const authTag = buffer.subarray(IV_LENGTH, IV_LENGTH + AUTH_TAG_LENGTH);
+  const encryptedText = buffer.subarray(IV_LENGTH + AUTH_TAG_LENGTH);
 
   const decipher = crypto.createDecipheriv(ALGORITHM, ENCRYPTION_KEY, iv);
   decipher.setAuthTag(authTag);
 
-  let decrypted = decipher.update(encryptedText);
-  decrypted = Buffer.concat([decrypted, decipher.final()]);
-
-  return decrypted.toString('utf8');
+  return Buffer.concat([decipher.update(encryptedText), decipher.final()]).toString('utf8');
 }
-
-

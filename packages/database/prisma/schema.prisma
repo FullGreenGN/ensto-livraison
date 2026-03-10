@@ -60,6 +60,7 @@ model Livreur {
   entreprise Entreprise @relation(fields: [entrepriseId], references: [id], onDelete: Restrict)
   vehicules  Vehicle[]
 
+  @@index([entrepriseId])
   @@map("Livreur")
 }
 
@@ -77,11 +78,11 @@ model Vehicle {
 }
 
 model Visiteur {
-  id                Int         @id @default(autoincrement()) @map("id_visiteur")
-  entrepriseId      Int         @map("id_entreprise")
-  nomCompletChiffre Bytes       @map("nom_complet_chiffre")
-  entreprise        Entreprise  @relation(fields: [entrepriseId], references: [id])
-  heureArrivee      DateTime    @default(now()) @map("heure_arrivee")
+  id                Int        @id @default(autoincrement()) @map("id_visiteur")
+  entrepriseId      Int        @map("id_entreprise")
+  nomCompletChiffre Bytes      @map("nom_complet_chiffre")
+  entreprise        Entreprise @relation(fields: [entrepriseId], references: [id])
+  heureArrivee      DateTime   @default(now()) @map("heure_arrivee")
 
   // Relations
   logs Historique_Log[]
@@ -92,7 +93,7 @@ model Visiteur {
 model Personnel {
   id             Int           @id @default(autoincrement()) @map("id_personnel")
   identifiant    String        @unique @db.VarChar(50)
-  motDePasseHash String        @map("mot_de_passe_hash") @db.VarChar(64) // SHA-256
+  motDePasseHash String        @map("mot_de_passe_hash") @db.VarChar(72) // bcrypt hash
   role           RolePersonnel
 
   // Relations
@@ -118,5 +119,11 @@ model Historique_Log {
   visiteur  Visiteur?  @relation(fields: [visiteurId], references: [id])
   personnel Personnel? @relation(fields: [personnelId], references: [id])
 
+  // Indexes for 5-year log queries
+  @@index([dateHeure(sort: Desc)])
+  @@index([dateHeure, typeAction])
+  @@index([vehiculeId])
+  @@index([visiteurId])
+  @@index([personnelId])
   @@map("Historique_Log")
 }

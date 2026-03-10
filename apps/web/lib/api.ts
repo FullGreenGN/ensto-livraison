@@ -27,8 +27,10 @@ async function request<T>(
   });
 
   if (!res.ok) {
-    const error = await res.json().catch(() => ({ message: res.statusText }));
-    throw new ApiError(res.status, error?.message ?? "Unknown error");
+    const body = await res.json().catch(() => ({}));
+    // Unified error envelope: { status: "error", message }
+    const message = body?.message ?? body?.error ?? res.statusText;
+    throw new ApiError(res.status, message);
   }
 
   // 204 No Content

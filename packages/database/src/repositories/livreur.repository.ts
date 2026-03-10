@@ -10,7 +10,7 @@ export class LivreurRepository implements IBaseRepository<Livreur, Prisma.Livreu
     this.prisma = prismaService.client;
   }
 
-  async create(data: Prisma.LivreurCreateInput): Promise<Livreur> {
+  async create(data: Prisma.LivreurCreateInput | Prisma.LivreurUncheckedCreateInput): Promise<Livreur> {
     try {
       return await this.prisma.livreur.create({ data });
     } catch (error: any) {
@@ -37,7 +37,7 @@ export class LivreurRepository implements IBaseRepository<Livreur, Prisma.Livreu
     }
   }
 
-  async update(id: number, data: Prisma.LivreurUpdateInput): Promise<Livreur> {
+  async update(id: number, data: Prisma.LivreurUpdateInput | Prisma.LivreurUncheckedUpdateInput): Promise<Livreur> {
     try {
       return await this.prisma.livreur.update({
         where: { id: Number(id) },

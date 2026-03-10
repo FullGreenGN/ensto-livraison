@@ -66,16 +66,19 @@ export async function getLivreursByEntreprise(
   return rows.map(toDTO);
 }
 
-export async function createLivreur(data: CreateLivreurDTO): Promise<LivreurDTO> {
-  // Use unchecked input if needed or proper relation connection
-  // Using 'any' to bypass strict typing if complex, or map correctly.
+/** Wrap encrypt output to satisfy Prisma's Uint8Array<ArrayBuffer> Bytes type */
+function encryptBytes(text: string): Uint8Array<ArrayBuffer> {
+  const buf = encrypt(text);
+  return new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength) as Uint8Array<ArrayBuffer>;
+}
 
-  const input: Prisma.LivreurCreateInput = {
-     entreprise: { connect: { id: data.entrepriseId } },
-     nomChiffre: encrypt(data.nom) as any,
-     prenomChiffre: encrypt(data.prenom) as any,
-     charteEpiValide: data.charteEpiValide ?? false,
-     dateSignatureEpi: data.dateSignatureEpi ? new Date(data.dateSignatureEpi) : null
+export async function createLivreur(data: CreateLivreurDTO): Promise<LivreurDTO> {
+  const input: Prisma.LivreurUncheckedCreateInput = {
+    entrepriseId: data.entrepriseId,
+    nomChiffre: encryptBytes(data.nom),
+    prenomChiffre: encryptBytes(data.prenom),
+    charteEpiValide: data.charteEpiValide ?? false,
+    dateSignatureEpi: data.dateSignatureEpi ? new Date(data.dateSignatureEpi) : null,
   };
 
   const row = await repository.create(input);
@@ -89,12 +92,12 @@ export async function updateLivreur(
   const existing = await repository.findById(id);
   if (!existing) throw new RecordNotFoundError("Livreur", id);
 
-  const input: Prisma.LivreurUpdateInput = {
-    ...(data.nom && { nomChiffre: encrypt(data.nom) as any }),
-    ...(data.prenom && { prenomChiffre: encrypt(data.prenom) as any }),
+  const input: Prisma.LivreurUncheckedUpdateInput = {
+    ...(data.nom !== undefined && { nomChiffre: encryptBytes(data.nom) }),
+    ...(data.prenom !== undefined && { prenomChiffre: encryptBytes(data.prenom) }),
     ...(data.charteEpiValide !== undefined && { charteEpiValide: data.charteEpiValide }),
     ...(data.dateSignatureEpi !== undefined && {
-        dateSignatureEpi: data.dateSignatureEpi ? new Date(data.dateSignatureEpi) : null,
+      dateSignatureEpi: data.dateSignatureEpi ? new Date(data.dateSignatureEpi) : null,
     }),
   };
 

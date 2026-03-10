@@ -4,8 +4,29 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="31af4273-a2d1-4f6a-a370-1005df7b2b69" name="Changes" comment="implement encryption and decryption functions, add entreprise and livreur repositories, and enhance error handling">
-      <change beforePath="$PROJECT_DIR$/packages/database/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/packages/database/prisma/schema.prisma" afterDir="false" />
+    <list default="true" id="31af4273-a2d1-4f6a-a370-1005df7b2b69" name="Changes" comment="update schema to include Visiteur model and enhance relationships in Entreprise and Livreur models">
+      <change afterPath="$PROJECT_DIR$/.env.example" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/api/src/controllers/auth.controller.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/api/src/routes/auth.routes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/api/src/services/auth.service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/web/app/(auth)/layout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/web/app/(auth)/login/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/web/app/(auth)/register/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/web/components/user-menu.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/web/hooks/useAuth.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/web/lib/api.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/database/src/interfaces/IPersonnelRepository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/database/src/repositories/personnel.repository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/api/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/api/src/app.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/web/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/web/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/database/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/database/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/database/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/database/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/typescript-config/base.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/typescript-config/base.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/ui/src/components/button.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/packages/ui/src/components/button.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/turbo.json" beforeDir="false" afterPath="$PROJECT_DIR$/turbo.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,9 +40,12 @@
   </component>
   <component name="CopilotUserSelectedModel">
     <selectedModels>
-      <entry key="chat-panel" value="GPT-4.1" />
-      <entry key="agent-panel" value="GPT-4.1" />
+      <entry key="chat-panel" value="Claude Sonnet 4.6" />
+      <entry key="agent-panel" value="Claude Sonnet 4.6" />
     </selectedModels>
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="108" />
   </component>
   <component name="FormatOnSaveOptions">
     <option name="myRunOnSave" value="false" />
@@ -32,6 +56,10 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
@@ -44,32 +72,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Docker.docker-compose.yml.postgres: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Volumes/FullGreen/Development/Workspaces/ensto/turborepo/packages/database&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;pnpm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Volumes/FullGreen/Development/Workspaces/ensto/turborepo/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Docker.docker-compose.yml.postgres: Compose Deployment.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "javascript.preferred.runtime.type.id": "node",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "/Volumes/FullGreen/Development/Workspaces/ensto/turborepo/apps/web/app/(auth)",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "pnpm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "/Volumes/FullGreen/Development/Workspaces/ensto/turborepo/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/apps/web/app/(auth)" />
       <recent name="$PROJECT_DIR$/packages/database" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -108,7 +138,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-WS-253.30387.83" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-WS-253.31033.133" />
       </set>
     </attachedChunks>
   </component>
@@ -128,6 +158,10 @@
       <workItem from="1771540865893" duration="776000" />
       <workItem from="1771541971798" duration="35000" />
       <workItem from="1771575965240" duration="3136000" />
+      <workItem from="1773127836385" duration="104000" />
+      <workItem from="1773128133349" duration="1256000" />
+      <workItem from="1773129405092" duration="242000" />
+      <workItem from="1773129663190" duration="4686000" />
     </task>
     <task id="LOCAL-00001" summary="implement encryption and decryption functions, add entreprise and livreur repositories, and enhance error handling">
       <option name="closed" value="true" />
@@ -137,7 +171,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771610019979</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="update schema to include Visiteur model and enhance relationships in Entreprise and Livreur models">
+      <option name="closed" value="true" />
+      <created>1771610583214</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1771610583214</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -145,7 +187,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="implement encryption and decryption functions, add entreprise and livreur repositories, and enhance error handling" />
-    <option name="LAST_COMMIT_MESSAGE" value="implement encryption and decryption functions, add entreprise and livreur repositories, and enhance error handling" />
+    <MESSAGE value="update schema to include Visiteur model and enhance relationships in Entreprise and Livreur models" />
+    <option name="LAST_COMMIT_MESSAGE" value="update schema to include Visiteur model and enhance relationships in Entreprise and Livreur models" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

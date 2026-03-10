@@ -3,6 +3,7 @@ import express, { Application, Request, Response } from "express";
 
 import { errorHandler } from "./middlewares/errorHandler";
 import { requestLogger } from "./middlewares/logger.middleware";
+import authRoutes from "./routes/auth.routes";
 import entrepriseRoutes from "./routes/entreprise.routes";
 import livreurRoutes from "./routes/livreur.routes";
 
@@ -10,7 +11,10 @@ export function createApp(): Application {
   const app = express();
 
   // ── Global middlewares ─────────────────────────────────────────────────────
-  app.use(cors());
+  app.use(cors({
+    origin: process.env.WEB_ORIGIN ?? "http://localhost:3000",
+    credentials: true,
+  }));
   app.use(express.json());
   app.use(requestLogger);
 
@@ -20,6 +24,7 @@ export function createApp(): Application {
   });
 
   // ── API routes ─────────────────────────────────────────────────────────────
+  app.use("/api/auth", authRoutes);
   app.use("/api/entreprises", entrepriseRoutes);
   app.use("/api/livreurs", livreurRoutes);
 

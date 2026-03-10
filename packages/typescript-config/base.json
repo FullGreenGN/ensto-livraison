@@ -10,6 +10,7 @@
     "isolatedModules": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "target": "ES2017",
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "preserveWatchOutput": true,

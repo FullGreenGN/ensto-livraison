@@ -103,6 +103,15 @@ export const authApi: AuthApi = {
     }),
 };
 
+// ── Enveloped response helper ─────────────────────────────────────────────────
+
+interface ApiEnvelope<T> { status: string; data: T }
+
+async function requestData<T>(path: string, options: RequestInit = {}, token?: string): Promise<T> {
+  const envelope = await request<ApiEnvelope<T>>(path, options, token);
+  return envelope.data;
+}
+
 // ── Entreprises ──────────────────────────────────────────────────────────────
 
 export interface Entreprise {
@@ -112,17 +121,17 @@ export interface Entreprise {
 }
 
 export const entreprisesApi = {
-  getAll: (token?: string) =>
-    request<Entreprise[]>("/api/entreprises", {}, token),
+  getAll: (token: string) =>
+    requestData<Entreprise[]>("/api/entreprises", {}, token),
 
   getOne: (id: number, token: string) =>
-    request<Entreprise>(`/api/entreprises/${id}`, {}, token),
+    requestData<Entreprise>(`/api/entreprises/${id}`, {}, token),
 
-  create: (data: Omit<Entreprise, "id">, token?: string) =>
-    request<Entreprise>("/api/entreprises", { method: "POST", body: JSON.stringify(data) }, token),
+  create: (data: Omit<Entreprise, "id">, token: string) =>
+    requestData<Entreprise>("/api/entreprises", { method: "POST", body: JSON.stringify(data) }, token),
 
   update: (id: number, data: Partial<Omit<Entreprise, "id">>, token: string) =>
-    request<Entreprise>(`/api/entreprises/${id}`, { method: "PATCH", body: JSON.stringify(data) }, token),
+    requestData<Entreprise>(`/api/entreprises/${id}`, { method: "PATCH", body: JSON.stringify(data) }, token),
 
   remove: (id: number, token: string) =>
     request<void>(`/api/entreprises/${id}`, { method: "DELETE" }, token),
@@ -142,17 +151,17 @@ export interface Livreur {
 export const livreursApi = {
   getAll: (token: string, entrepriseId?: number) => {
     const qs = entrepriseId ? `?entrepriseId=${entrepriseId}` : "";
-    return request<Livreur[]>(`/api/livreurs${qs}`, {}, token);
+    return requestData<Livreur[]>(`/api/livreurs${qs}`, {}, token);
   },
 
   getOne: (id: number, token: string) =>
-    request<Livreur>(`/api/livreurs/${id}`, {}, token),
+    requestData<Livreur>(`/api/livreurs/${id}`, {}, token),
 
-  create: (data: Omit<Livreur, "id">, token?: string) =>
-    request<Livreur>("/api/livreurs", { method: "POST", body: JSON.stringify(data) }, token),
+  create: (data: Omit<Livreur, "id">, token: string) =>
+    requestData<Livreur>("/api/livreurs", { method: "POST", body: JSON.stringify(data) }, token),
 
   update: (id: number, data: Partial<Omit<Livreur, "id">>, token: string) =>
-    request<Livreur>(`/api/livreurs/${id}`, { method: "PATCH", body: JSON.stringify(data) }, token),
+    requestData<Livreur>(`/api/livreurs/${id}`, { method: "PATCH", body: JSON.stringify(data) }, token),
 
   remove: (id: number, token: string) =>
     request<void>(`/api/livreurs/${id}`, { method: "DELETE" }, token),

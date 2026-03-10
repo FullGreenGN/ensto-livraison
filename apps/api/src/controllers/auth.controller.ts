@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { z } from "zod";
+import { ROLE_PERMISSIONS } from "@repo/types";
 import * as AuthService from "../services/auth.service";
 
 const loginSchema = z.object({
@@ -67,5 +68,19 @@ export async function register(req: Request, res: Response, next: NextFunction):
   } catch (err) {
     next(err);
   }
+}
+
+// ── GET /api/auth/me ──────────────────────────────────────────────────────────
+
+export function me(req: Request, res: Response): void {
+  const { sub, role } = req.user!;
+  res.json({
+    status: "success",
+    data: {
+      id: sub,
+      role,
+      permissions: ROLE_PERMISSIONS[role] ?? [],
+    },
+  });
 }
 

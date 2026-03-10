@@ -1,6 +1,6 @@
 import { Router, IRouter } from "express";
 import * as EntrepriseController from "../controllers/entreprise.controller";
-import { authenticate, requireRole } from "../middlewares/auth";
+import { authenticate, requirePermission } from "../middlewares/auth";
 
 const router: IRouter = Router();
 
@@ -10,19 +10,18 @@ const router: IRouter = Router();
  */
 
 // GET /api/entreprises
-router.get("/", EntrepriseController.getAll);
+router.get("/", authenticate, requirePermission("entreprise:read"), EntrepriseController.getAll);
 
 // GET /api/entreprises/:id
-router.get("/:id", authenticate, EntrepriseController.getOne);
+router.get("/:id", authenticate, requirePermission("entreprise:read"), EntrepriseController.getOne);
 
 // POST /api/entreprises
-router.post("/", EntrepriseController.create);
+router.post("/", authenticate, requirePermission("entreprise:create"), EntrepriseController.create);
 
 // PATCH /api/entreprises/:id
-router.patch("/:id", authenticate, requireRole("Admin"), EntrepriseController.update);
+router.patch("/:id", authenticate, requirePermission("entreprise:update"), EntrepriseController.update);
 
 // DELETE /api/entreprises/:id
-router.delete("/:id", authenticate, requireRole("Admin"), EntrepriseController.remove);
+router.delete("/:id", authenticate, requirePermission("entreprise:delete"), EntrepriseController.remove);
 
 export default router;
-

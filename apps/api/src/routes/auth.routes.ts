@@ -10,6 +10,9 @@ router.post("/login", AuthController.login);
 /** POST /api/auth/register – Public */
 router.post("/register", AuthController.register);
 
+/** GET  /api/auth/me              – Protected */
+router.get("/me", authenticate, AuthController.me);
+
 /** POST /api/auth/change-password – Protected */
 router.post("/change-password", authenticate, AuthController.changePassword);
 

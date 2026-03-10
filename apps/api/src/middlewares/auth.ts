@@ -1,19 +1,15 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { UnauthorizedError } from "../lib/errors";
+import { can, type Permission, type Role } from "@repo/types";
+import { ForbiddenError, UnauthorizedError } from "../lib/errors";
 
-/**
- * Shape of the decoded JWT payload we expect.
- * Extend this as your token structure evolves.
- */
 export interface JwtPayload {
-  sub: number;       // Personnel.id
-  role: string;      // e.g. "Admin" | "Magasinier"
+  sub: number;
+  role: Role;
   iat?: number;
   exp?: number;
 }
 
-// Extend Express's Request type so downstream handlers can read `req.user`
 declare global {
   namespace Express {
     interface Request {
@@ -22,56 +18,54 @@ declare global {
   }
 }
 
-const JWT_SECRET =  "changeme_in_production";
+const JWT_SECRET = process.env.JWT_SECRET ?? "changeme_in_production";
 
-/**
- * `authenticate` middleware
- *
- * Expects the request to carry a Bearer token in the Authorization header:
- *   Authorization: Bearer <token>
- *
- * On success it attaches the decoded payload to `req.user` and calls next().
- * On failure it forwards an `UnauthorizedError` to the error handler.
- *
- * TODO: Replace the mock secret with a proper key loaded from a secrets
- *       manager (AWS Secrets Manager, Vault, etc.) before going to production.
- */
-export function authenticate(
-  req: Request,
-  _res: Response,
-  next: NextFunction,
-): void {
+// ── authenticate ──────────────────────────────────────────────────────────────
+
+export function authenticate(req: Request, _res: Response, next: NextFunction): void {
   try {
     const authHeader = req.headers.authorization;
-
     if (!authHeader?.startsWith("Bearer ")) {
       next(new UnauthorizedError("No Bearer token provided"));
       return;
     }
-
-    const token = authHeader.slice(7); // strip "Bearer "
+    const token = authHeader.slice(7);
     const decoded = jwt.verify(token, JWT_SECRET) as unknown as JwtPayload;
     req.user = decoded;
-
     next();
-  } catch (err) {
-    // jwt.verify throws JsonWebTokenError / TokenExpiredError
+  } catch {
     next(new UnauthorizedError("Invalid or expired token"));
   }
 }
 
+// ── requireRole ───────────────────────────────────────────────────────────────
+
 /**
- * `requireRole` middleware factory
- *
+ * Checks the role directly (coarse-grained guard).
  * Usage: router.delete("/:id", authenticate, requireRole("Admin"), handler)
  */
-export function requireRole(...roles: string[]) {
+export function requireRole(...roles: Role[]) {
   return (req: Request, _res: Response, next: NextFunction): void => {
     if (!req.user || !roles.includes(req.user.role)) {
-      next(new UnauthorizedError(`Role required: ${roles.join(" | ")}`));
+      next(new ForbiddenError(`Role required: ${roles.join(" | ")}`));
       return;
     }
     next();
   };
 }
 
+// ── requirePermission ─────────────────────────────────────────────────────────
+
+/**
+ * Checks a fine-grained permission from the ROLE_PERMISSIONS map.
+ * Usage: router.post("/", authenticate, requirePermission("livreur:create"), handler)
+ */
+export function requirePermission(permission: Permission) {
+  return (req: Request, _res: Response, next: NextFunction): void => {
+    if (!req.user || !can(req.user.role, permission)) {
+      next(new ForbiddenError(`Permission required: ${permission}`));
+      return;
+    }
+    next();
+  };
+}

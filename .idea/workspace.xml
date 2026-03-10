@@ -4,29 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="31af4273-a2d1-4f6a-a370-1005df7b2b69" name="Changes" comment="update schema to include Visiteur model and enhance relationships in Entreprise and Livreur models">
-      <change afterPath="$PROJECT_DIR$/.env.example" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/api/src/controllers/auth.controller.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/api/src/routes/auth.routes.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/api/src/services/auth.service.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/web/app/(auth)/layout.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/web/app/(auth)/login/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/web/app/(auth)/register/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/web/components/user-menu.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/web/hooks/useAuth.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/web/lib/api.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/database/src/interfaces/IPersonnelRepository.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/database/src/repositories/personnel.repository.ts" afterDir="false" />
+    <list default="true" id="31af4273-a2d1-4f6a-a370-1005df7b2b69" name="Changes" comment="add authentication routes, controllers, and services; implement user registration and login functionality">
+      <change afterPath="$PROJECT_DIR$/apps/web/app/profile/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/web/components/app-header.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/api/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/api/src/app.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/api/src/controllers/auth.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/api/src/controllers/auth.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/api/src/routes/auth.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/api/src/routes/auth.routes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/api/src/services/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/api/src/services/auth.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/web/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/web/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/database/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/database/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/database/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/database/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/typescript-config/base.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/typescript-config/base.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/ui/src/components/button.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/packages/ui/src/components/button.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/turbo.json" beforeDir="false" afterPath="$PROJECT_DIR$/turbo.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -161,7 +146,7 @@
       <workItem from="1773127836385" duration="104000" />
       <workItem from="1773128133349" duration="1256000" />
       <workItem from="1773129405092" duration="242000" />
-      <workItem from="1773129663190" duration="4686000" />
+      <workItem from="1773129663190" duration="5673000" />
     </task>
     <task id="LOCAL-00001" summary="implement encryption and decryption functions, add entreprise and livreur repositories, and enhance error handling">
       <option name="closed" value="true" />
@@ -179,7 +164,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771610583214</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="add authentication routes, controllers, and services; implement user registration and login functionality">
+      <option name="closed" value="true" />
+      <created>1773135520927</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1773135520927</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -188,7 +181,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="implement encryption and decryption functions, add entreprise and livreur repositories, and enhance error handling" />
     <MESSAGE value="update schema to include Visiteur model and enhance relationships in Entreprise and Livreur models" />
-    <option name="LAST_COMMIT_MESSAGE" value="update schema to include Visiteur model and enhance relationships in Entreprise and Livreur models" />
+    <MESSAGE value="add authentication routes, controllers, and services; implement user registration and login functionality" />
+    <option name="LAST_COMMIT_MESSAGE" value="add authentication routes, controllers, and services; implement user registration and login functionality" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

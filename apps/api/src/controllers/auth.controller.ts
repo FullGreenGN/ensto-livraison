@@ -33,7 +33,26 @@ export async function login(req: Request, res: Response, next: NextFunction): Pr
   }
 }
 
-// ── POST /api/auth/register ───────────────────────────────────────────────────
+// ── POST /api/auth/change-password ───────────────────────────────────────────
+
+const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1),
+  newPassword: z.string().min(8, "Password must be at least 8 characters"),
+});
+
+export async function changePassword(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const parsed = changePasswordSchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ status: "error", message: parsed.error.errors.map((e) => e.message).join(", ") });
+      return;
+    }
+    await AuthService.changePassword(req.user!.sub, parsed.data.currentPassword, parsed.data.newPassword);
+    res.status(200).json({ status: "success", message: "Password updated" });
+  } catch (err) {
+    next(err);
+  }
+}
 
 export async function register(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {

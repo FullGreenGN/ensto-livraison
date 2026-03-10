@@ -34,7 +34,24 @@ export async function loginPersonnel(
   };
 }
 
-// ── Register ──────────────────────────────────────────────────────────────────
+// ── Change password ───────────────────────────────────────────────────────────
+
+export async function changePassword(
+  personnelId: number,
+  currentPassword: string,
+  newPassword: string,
+): Promise<void> {
+  const personnel = await repository.findById(personnelId);
+  if (!personnel) throw new UnauthorizedError("Account not found");
+
+  if (personnel.motDePasseHash !== hashPassword(currentPassword)) {
+    throw new UnauthorizedError("Current password is incorrect");
+  }
+
+  await repository.update(personnelId, {
+    motDePasseHash: hashPassword(newPassword),
+  });
+}
 
 export async function registerPersonnel(
   identifiant: string,
